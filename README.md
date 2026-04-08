@@ -56,4 +56,137 @@ The repository includes:
 
 - Numerical experiments across multiple dimensions  
 - Comparisons between optimization methods  
-- Visualizations and analysis of resulting lattice structures  
+- Visualizations and analysis of resulting lattice structures
+
+  ---
+
+
+##  Folder Structure and Workflow
+
+This repository is organized into four main components:
+
+* `experiments/` – scripts to run optimization algorithms and post-processing
+* `input_data/` – required input data (initial Gram matrices and PELs)
+* `results/` – output of optimization runs and analysis
+* `src/` – core implementation of the algorithms
+
+---
+
+##  Running Optimization Experiments
+
+All optimization scripts are located in the `experiments/` folder.
+
+### 1. Prerequisites
+
+Before running any optimization (`Run_...` scripts), you need:
+
+* **Initial Gram matrices**
+  Located in:
+  `input_data/Initial_Gram_matrices/`
+
+* **Universal Partial Evaluation Lattice (PEL)**
+  Located in:
+  `input_data/Partial_Evaluation_Lattices/`
+
+These inputs are required for all optimization routines.
+
+---
+
+### 2. Running an Optimization
+
+To run an optimization, execute one of the following scripts:
+
+```bash
+julia Run_*.jl
+```
+
+Examples:
+
+* `Run_RiemannianTrustRegionMethod_universalPEL.jl`
+* `Run_Riemannian_Gradient_Descent.jl`
+* `Run_Riemannian_Newton_BasisMethod.jl`
+
+Each script:
+
+* loads the required input data,
+* performs the optimization,
+* stores the resulting Gram matrices in the `results/` folder.
+
+---
+
+### 3. Post-processing Results
+
+After running an optimization, the resulting Gram matrices must be:
+
+* beautified, and
+* grouped into equivalence classes
+
+This is done using:
+
+```bash
+julia CleanGramMatrices.jl
+```
+
+This script processes the raw output and stores cleaned and classified results.
+
+---
+
+### 4. Interpreting Results
+
+To interpret the optimized Gram matrices, run:
+
+```bash
+julia "interpret optimal matrices.jl"
+```
+
+This provides a more meaningful representation of the computed solutions.
+
+---
+
+### 5. Optimization over Multiple α Values
+
+To run optimizations over multiple values of α:
+
+1. Execute one of:
+
+   * `Run_OptimizeOverMultibleAlphas_n2.jl`
+   * `Run_OptimizeOverMultibleAlphas_n3.jl`
+
+2. Then generate plots using:
+
+   * `plot_landscape.jl`
+   * `plot_landscape_n2.jl`
+
+---
+
+### 6. Generating Input Data
+
+The `experiments/` folder also contains scripts for generating input data.
+
+* File names are self-explanatory
+* These scripts generate:
+
+  * initial Gram matrices
+  * partial evaluation lattices
+
+---
+
+##  Folder Overview
+
+```
+.
+├── experiments/        # optimization scripts and analysis tools
+├── input_data/         # required input (Gram matrices, PELs)
+├── results/            # outputs, plots, and processed data
+└── src/                # core implementation
+```
+
+---
+
+##  Notes
+
+* Ensure that all required input data is available before running any `Run_...` script.
+* Post-processing with `CleanGramMatrices.jl` is required for meaningful results.
+* For multi-α experiments, plotting must be performed separately after optimization.
+
+  
