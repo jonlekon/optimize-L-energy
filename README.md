@@ -1,6 +1,6 @@
 # optimize-L-energy
 Develops Smooth Optimizations method to minimize the L-energy functional over the SPD Gram matrices with unit determinate.
-#  Gaussian Core Model Minimization on Lattices
+#  Gaussian Core Model Minimization
 
 This repository contains the implementation and experimental results for a master’s thesis on the **minimization of the Gaussian core model over lattices of fixed volume**.
 
