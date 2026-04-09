@@ -22,6 +22,10 @@ i.e., the manifold of symmetric positive definite matrices with unit determinant
 
 The set $\mathcal{P}_n$ forms a smooth Riemannian manifold embedded in the space of symmetric matrices. This allows the use of methods from *Riemannian optimization*, which solve constrained problems by operating directly on the manifold using tools such as tangent spaces, retractions, and Riemannian gradients.
 
+The cost function we aim to minimize is
+$$
+\mathcal E_{\alpha)(Q) = \sum_{0 \ne z \in \mathbb Z^n} e^{\alpha z^TQz}.
+$$
 ---
 
 ##  Methods
