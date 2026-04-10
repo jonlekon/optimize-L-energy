@@ -93,6 +93,7 @@ Before running any optimization (`Run_...` scripts), you need:
 * **Universal Partial Evaluation Lattice (PEL)**
   Located in:
   `input_data/Partial_Evaluation_Lattices/`
+For n = 7,8 the PEL are too large for GitHub, download them here https://drive.google.com/drive/folders/1smM_PjhZsWFXrDUInItzpNqmOhCdrXa2?usp=sharing .
 
 These inputs are required for all optimization routines.
 
