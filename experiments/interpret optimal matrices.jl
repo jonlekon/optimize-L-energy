@@ -192,9 +192,9 @@ end
 
 
 
-n = 4
-C = 70
-alpha = float(pi) # parameter alpha in the energy functional
+n = 3
+C = 300
+alpha = 0.437 #float(pi) # parameter alpha in the energy functional
 println("Using C = $C")
 
 #------------------------Load universal PEM-------------------------------------------------
@@ -205,7 +205,11 @@ println("Using C = $C")
 
 Qs = optimal_gram_matrices(n)
 N = length(Qs)
-
+Qs[1] = 2^(-4/3) *[
+    4  2  2
+    2  3  1
+    2  1  3
+]
 # output E_alpha(Q), || grad E_alpha(Q) ||_Q and Hessian EVs for each optimal Q
 for i = 1:N
   Q = Qs[i]

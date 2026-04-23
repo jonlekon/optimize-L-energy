@@ -149,8 +149,9 @@ n = 3 # dimension of the lattice
 N = 100 # number of initial Qs
 #alphas = collect(0.4:0.002:0.45) #alpha_critical in [0.45, 0.5 ]
 alphas = vcat(
-    collect(0:0.5:20),     # very fine near transition
+    collect(0.437:0.0001:0.440),     # very fine near transition
 )
+display(alphas)
 Method = "RTR_"
 C = 100
 println("Using C = $C")

@@ -146,10 +146,10 @@ end
 
 
 n = 2 # dimension of the lattice
-N = 100 # number of initial Qs
+N = 1000 # number of initial Qs
 #alphas = collect(0.4:0.002:0.45) #alpha_critical in [0.45, 0.5 ]
 alphas = vcat(
-    collect(0.25:0.01:0.6),     # very fine near transition
+    collect(0.1:0.1:10),     # very fine near transition
 )
 Method = "RTR_"
 C = 500
@@ -158,8 +158,8 @@ println("Using C = $C")
 folder_initial_matrices = joinpath(input_data, "Initial_Gram_matrices/")
 @load joinpath(folder_initial_matrices,"Random_initial_Qs_n$(n).jld2") Qs
 Qs = Qs[1:N]  
-Q_hex  = (1 / sqrt(3)) *[ 4  1;
-                             1  4] 
+Q_hex  = (1 / sqrt(3)) *[ 2  1;
+                             1  2] 
 metric_type = 1 # affine-invariant metric
 evaluationUpdate = false
 
@@ -170,7 +170,7 @@ Z_universal = PEM
 
 #------------------------------Run Optmization-----------------------------------------------
 maxIter = 50
-Qopts, energies, iterations, alphas, initial_matrix_number =  run_multiple_RTR(Qs, Z_universal, n, alphas, C; tol = 5e-10, maxIter= maxIter) 
+Qopts, energies, iterations, alphas, initial_matrix_number =  run_multiple_RTR(Qs, Z_universal, n, alphas, C; tol = 1e-13, maxIter= maxIter) 
 #-------------------------------- only keep Qs with iterations < maxIter-----------------------
 keep_idx = findall(iterations .< maxIter)
 Qopts    = Qopts[keep_idx]

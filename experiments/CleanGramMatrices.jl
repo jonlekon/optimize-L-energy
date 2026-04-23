@@ -19,14 +19,14 @@ using .EvaluationMatrix: shortest_lattice_vector, shortest_n_lattice_vectors
 export lattice_isometry
 
   
-n =  2   # dimension of the lattices 
-alpha = float(pi) # parameter alpha in the energy functional
+n =  3  # dimension of the lattices 
+alpha = 0.437 #float(pi) # parameter alpha in the energy functional
 Method = "RTR_"
 
 # -------------------- Load data of the optimizes Gram matrices --------------------
-folder_name =joinpath(results,"results_$(Method)alphaPI","n_$(n)")
+folder_name =joinpath(results,"alpha_critical_analysis","results_$(Method)n3_alpha0437")
 file_in = joinpath(folder_name,
-                  "$(Method)optimized_Qs_n$(n)_alphaPI_test.jld2")
+                  "$(Method)optimized_Qs_n$(n)_n3_alpha0437.jld2")
 
 @assert isfile(file_in) "File not found: $file_in"
 # Load data
@@ -34,6 +34,9 @@ file_in = joinpath(folder_name,
 data = load(file_in)
 Qopts = data["Qopts"]
 energies = data["energies"]
+
+#folder_name = "results\\alpha_critical_analysis\\alphas_n3_0437_0440\\"
+#load joinpath(folder_name, "checkpoint_Qopts.jld2") Qopts 
 
 #------------------------Clean Matrices-------------------------------------------------------
 # Optimization algorithms find matrices entries that are the same up to tol. clean_Matrices takes all matrices and
@@ -145,6 +148,7 @@ function congurence_difference(Q1::AbstractMatrix, Q2::AbstractMatrix)
     return abs(tr(Q1-Q2))  
 end
 
+
 #-----------------------Test for isometry of lattices------------------------------------------------------
         # Two lattices are suspected to be the same if they have  congruent Gram matrices or have  the same shortest lattice vectors
         # Beautification of the results
@@ -159,7 +163,7 @@ function lattice_isometry(Q1::AbstractMatrix, Q2::AbstractMatrix; tol=1e-2)
     diff_congurence = congurence_difference(Q1,Q2)/ sqrt(n)
     #println("Congurence difference: ", diff_congurence)
     
-    min_iso_diff = min(diff_congurence,  diff_shortest_lattice_vectors)
+    min_iso_diff = max(diff_congurence,  diff_shortest_lattice_vectors)
     println("iso difference: ",min_iso_diff)
     return min_iso_diff < tol
 end
@@ -183,8 +187,8 @@ for Q in Qopts_clean
 end
 
 println("Number of equivalence classes: $(length(equiv_classes))")
-@save joinpath(folder_name,"$(Method)optimized_Qs_n$(n)_alphaPI_equiv_classes_test.jld2") equiv_classes
-
+@save joinpath(folder_name,"$(Method)optimized_Qs_n$(n)_alpha03_equiv_classes.jld2") equiv_classes
+#@save joinpath(folder_name,"equiv_classes.jld2") equiv_classes
 
 #----------------------find closed expressions------------------------------------
 # optimal lattices are suspected to have closed expressions, i.e. fractions with rational exponents
@@ -214,6 +218,6 @@ function save_equiv_classes_txt_Q(filename::AbstractString, closed_equi_classes)
     #println("Saved $(length(closed_equi_classes)) equivalence classes to $filename")
 end
 
-save_equiv_classes_txt_Q(joinpath(folder_name, "$(Method)optimized_Qs_n$(n)_alphaPI_equiv_classes_test.txt"), closed_equi_classes)
-
+save_equiv_classes_txt_Q(joinpath(folder_name, "$(Method)optimized_Qs_n$(n)_alpha03_equiv_classes.txt"), closed_equi_classes)
+#save_equiv_classes_txt_Q(joinpath(folder_name, "equiv_classes.txt"), closed_equi_classes)
 end # module CleanGramMatrices

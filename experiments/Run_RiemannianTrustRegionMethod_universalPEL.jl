@@ -150,12 +150,12 @@ function radius_C(n)
 end
 
 
-n = 2                       # dimension of the lattice
-alpha =  float(pi)          # parameter alpha in the energy functional
+n = 3                       # dimension of the lattice
+alpha = 0.437  #float(pi)          # parameter alpha in the energy functional
 Method = "RTR_"             # Method used
 take_Identity_as_starting_point = false
-N = 10 # number of initial Qs
-C = radius_C(n) 
+N = 1000 # number of initial Qs
+C = 300 #radius_C(n) 
 println("Using C = $C")
 metric_type = 1 # affine-invariant metric
 
@@ -181,7 +181,7 @@ Z_universal = PEM
 
 #------------------------------Run Optmizations-----------------------------------------------
 maxIter = 50
-Qopts, energies, iterations, _ =  run_multiple_RTR(Qs, Z_universal, n, C; tol = 5e-12, maxIter= maxIter) 
+Qopts, energies, iterations, _ =  run_multiple_RTR(Qs, Z_universal, n, C; tol = 1e-13, maxIter= maxIter) 
 
 #-------------------------------- only keep Qs with iterations < maxIter-----------------------
 keep_idx = findall(iterations .< maxIter)
@@ -267,6 +267,6 @@ println("Kept $(length(Qopts)) / $(length_Qopts_old) potential local minimizers.
     end
 end
 
-@save joinpath(results_dir,"results_$(Method)alphaPI","n_$(n)" , "$(Method)optimized_Qs_n$(n)_alphaPI_test.jld2") Qopts energies
-save_matrices_txt(joinpath(results_dir,"results_$(Method)alphaPI","n_$(n)" , "$(Method)optimized_Qs_n$(n)_alphaPI_test.txt"), Qopts)
+@save joinpath(results_dir,"alpha_critical_analysis","results_$(Method)n3_alpha0437", "$(Method)optimized_Qs_n$(n)_n3_alpha0437.jld2") Qopts energies
+save_matrices_txt(joinpath(results_dir,"alpha_critical_analysis","results_$(Method)n3_alpha0437" , "$(Method)optimized_Qs_n$(n)_n3_alpha0437.txt"), Qopts)
 

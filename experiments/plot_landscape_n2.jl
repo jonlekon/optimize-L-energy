@@ -1,5 +1,6 @@
 using JLD2
 using Plots
+using Plots.PlotMeasures
 #using Revise
 
 src = joinpath(@__DIR__, "..", "src")
@@ -10,7 +11,7 @@ experiments_dir = joinpath(@__DIR__, "..", "experiments")
 include(joinpath(src, "lattice_isometry.jl"))
 
 #------------------------------Analysis of results---------------------------------------------
-folder_name = "results\\alpha_critical_analysis\\temporary_results\\"
+folder_name = "results\\alpha_critical_analysis\\alphas_n2_01_10\\"
 @load joinpath(folder_name, "checkpoint_Qopts.jld2") Qopts 
 @load joinpath(folder_name, "checkpoint_energies.jld2") energies
 @load joinpath(folder_name, "checkpoint_alphas.jld2") alphas
@@ -30,7 +31,7 @@ function group_by_alpha(alphas)
 end
 
 # find clusters by isometry. Extract equivalence classes
-function cluster_minimizers(Qs; tol=1e-2)
+function cluster_minimizers(Qs; tol=1e-1)
     clusters = Vector{Tuple{Int, Vector{Int}}}()
 
     for i in eachindex(Qs)
@@ -55,7 +56,7 @@ function cluster_minimizers(Qs; tol=1e-2)
 end
 
 # clsify in HEX and other
-function classify_clusters(reps; tol=1e-2)
+function classify_clusters(reps; tol=1e-1)
     labels = Symbol[]
 
     for Q in reps
@@ -190,7 +191,7 @@ function compute_fractions(results)
     for α in alphas_sorted
         data = results[α]
 
-        total = sum(data.sizes)
+        total = sum(data.sizes) #total number of minimizers per alpha_i
 
         hex_size = sum(
             size for (size, label) in zip(data.sizes, data.labels)
@@ -249,17 +250,23 @@ fig_dir = joinpath(results_dir, "alpha_critical_analysis", "Figures")
 ymax = maximum(plot_data.num_clusters)
 xmin = minimum(α)
 xmax = maximum(α)
-x_1 = 0.5
+x_1 = xmax
 x_6 = xmax
+range = xmax - xmin
+ticks = range / 20
 
 p1 = plot(α, plot_data.num_clusters,
     xlabel="alpha",
-    ylabel="Number of potential optimal lattices",
+    ylabel="# potential optimal lattices",
     marker=:o,
-    xlim=((0.28),x_1),
+    color = :green,
+    size = (800, 300),  # (width, height) → reduced height
+    left_margin = 10mm,
+    bottom_margin = 8mm,
+    xlim=(xmin, x_1),
     ylim=(0, ymax + 1),
     yticks = 0:1:ymax+1,
-    xticks = xmin:(x_1/10):x_1,
+    xticks = xmin:ticks:x_1,
     label = "Number of potential optimal lattices"
 )
 savefig(p1, joinpath(fig_dir, "num_minimizers.pdf"))
@@ -268,10 +275,14 @@ savefig(p1, joinpath(fig_dir, "num_minimizers.pdf"))
 
 p3 = plot(α, plot_data.min_eig_global,
     xlabel="alpha",
-    ylabel="Smallest Eigenvalue of the Hessian matrix",
+    ylabel="Min EV of the \n Hessian matrix",
     marker=:o,
+    color = :green,
+    size = (800, 300),  # (width, height) → reduced height
+    left_margin = 10mm,
+    bottom_margin = 8mm,
     linewidth=1,
-    xticks = xmin:(xmax/10):xmax,
+    xticks = xmin:0.5:xmax,
      xlim=(xmin, xmax),
     label="Stability of minimizers"
 )
@@ -285,11 +296,14 @@ p4 = plot(α, hex_fraction,
     xlabel="alpha",
     ylabel="Fraction of runs",
     marker=:o,
+    size = (800, 300),  # (width, height) → reduced height
+    left_margin = 10mm,
+    bottom_margin = 8mm,
     title="Fraction of runs converging to HEX-type minimizers",
-    ylim=(0,0.25),
+    ylim=(0,1),
     label="HEX",
     xlim=(xmin, xmax),
-    xticks = xmin:(xmax/10):xmax)
+    xticks = xmin:ticks:xmax)
 
 savefig(p4, joinpath(fig_dir, "hex_fraction.pdf") )
 
@@ -298,19 +312,23 @@ savefig(p4, joinpath(fig_dir, "hex_fraction.pdf") )
 p = plot(α, hex_fraction,
     label="HEX",
     xlabel="alpha",
-    ylabel="Fraction of runs",
+    ylabel="cluster hit probability",
     marker=:o,
+    size = (800, 300),  # (width, height) → reduced height
+    left_margin = 10mm,
+    bottom_margin = 8mm,
     ylim=(0,1.1),
     xlim=(xmin, 2),
     xticks = xmin:(2/10):2,
-    linewidth=2
+    linewidth=1,
+    legend = :bottomright
 )
 
 
 plot!(p, α, other_fraction,
     label="Other",
     marker=:o,
-    linewidth=2
+    linewidth=1
 )
 
 savefig(p, joinpath(fig_dir, "fraction_breakdown.pdf"))
@@ -321,12 +339,15 @@ p = plot(α, hex_numbers,
     label="HEX",
     xlabel="alpha",
     ylabel="Total cluster frequencies",
+    size = (800, 300),
+    left_margin = 10mm,
+    bottom_margin = 8mm,
     marker=:o,
-    ylim=(-0.1, maximum(other_numbers) + 10),
-    xlim=(0.28,0.53),
+    ylim=(-0.1, maximum(hex_numbers) + 10),
+    xlim=(xmin, 2),
+    xticks = xmin:(2/10):2,
     linewidth=2,
-    xticks = xmin:(x_6/10):x_6,
-    legend = :bottomright 
+    legend = :topleft 
 )
 
 plot!(p, α, other_numbers,
