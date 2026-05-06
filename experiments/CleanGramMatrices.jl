@@ -19,14 +19,14 @@ using .EvaluationMatrix: shortest_lattice_vector, shortest_n_lattice_vectors
 export lattice_isometry
 
   
-n =  3  # dimension of the lattices 
-alpha = 0.437 #float(pi) # parameter alpha in the energy functional
+n =  2  # dimension of the lattices 
+alpha = float(pi) # parameter alpha in the energy functional
 Method = "RTR_"
 
 # -------------------- Load data of the optimizes Gram matrices --------------------
-folder_name =joinpath(results,"alpha_critical_analysis","results_$(Method)n3_alpha0437")
+folder_name =joinpath(results,"results_$(Method)alphaPI","n_$(n)")
 file_in = joinpath(folder_name,
-                  "$(Method)optimized_Qs_n$(n)_n3_alpha0437.jld2")
+                  "$(Method)optimized_Qs_n$(n)_test.jld2")
 
 @assert isfile(file_in) "File not found: $file_in"
 # Load data
@@ -152,7 +152,7 @@ end
 #-----------------------Test for isometry of lattices------------------------------------------------------
         # Two lattices are suspected to be the same if they have  congruent Gram matrices or have  the same shortest lattice vectors
         # Beautification of the results
-function lattice_isometry(Q1::AbstractMatrix, Q2::AbstractMatrix; tol=1e-2)
+function lattice_isometry(Q1::AbstractMatrix, Q2::AbstractMatrix; tol=1e-4)
 
     #1 shortest lattice Vector
     _,SLV1 = shortest_lattice_vector(Q1)
@@ -187,7 +187,7 @@ for Q in Qopts_clean
 end
 
 println("Number of equivalence classes: $(length(equiv_classes))")
-@save joinpath(folder_name,"$(Method)optimized_Qs_n$(n)_alpha03_equiv_classes.jld2") equiv_classes
+@save joinpath(folder_name,"$(Method)optimized_Qs_n$(n)_equiv_classes_test.jld2") equiv_classes
 #@save joinpath(folder_name,"equiv_classes.jld2") equiv_classes
 
 #----------------------find closed expressions------------------------------------
@@ -218,6 +218,6 @@ function save_equiv_classes_txt_Q(filename::AbstractString, closed_equi_classes)
     #println("Saved $(length(closed_equi_classes)) equivalence classes to $filename")
 end
 
-save_equiv_classes_txt_Q(joinpath(folder_name, "$(Method)optimized_Qs_n$(n)_alpha03_equiv_classes.txt"), closed_equi_classes)
+save_equiv_classes_txt_Q(joinpath(folder_name, "$(Method)optimized_Qs_n$(n)_equiv_classes_test.txt"), closed_equi_classes)
 #save_equiv_classes_txt_Q(joinpath(folder_name, "equiv_classes.txt"), closed_equi_classes)
 end # module CleanGramMatrices
